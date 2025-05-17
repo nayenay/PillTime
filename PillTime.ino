@@ -19,19 +19,20 @@ NTPClient timeClient(ntpUDP); //clase para obtener hora desde un servidor NTP
 
 // Variables para guardar fecha y hora
 String formattedDate;  //variable principal, guarda en el formato "2025-05-17T15:26:03Z" Z es de hora universal
-String dayStamp;        
-String timeStamp;   
+String dayStamp;       //solo fecha "2025-05-17"
+String timeStamp;      //solo hora   "15:26:03Z"
+
 
 
 //Onjetos en Firebase
-FirebaseData firebaseData;    //para mejorar la comunicación con Firebase
+FirebaseData firebaseData;    //para mejorar la comunicación con Firebase, FirebaseData es una librería, el objeto firebaseData envía datos, recive respuestas, informa si hubo errores, guarda resultados de una operación   
 FirebaseJson json;            //para etructurar los datos a enviar en formato JSON
 
 //Ruta y datos a enviar
-String path = "/esp32";        
-String user = "jazmin";
-String sensor = "prueba";
-int valuePrueba = 12;
+String path = "/esp32";       //Ruta base en Firebase        
+String user = "jazmin";       //Usuario (parte de la ruta)
+String sensor = "prueba";    //En este ejemplo es el nombre del sensor (renombrar)
+int valuePrueba = 12;        //Valor a envia (cambiar a bool, solo presionará un botón verde o rojo)
 
 //Configuración inicial
 void setup(){
