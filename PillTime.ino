@@ -7,13 +7,13 @@
 
 
 //Dirección del proyecto en Firebase
-#define FIREBASE_HOST "YOUR_FIRABSE_HOST"
+#define FIREBASE_HOST "https://logincorreo-9d4c9-default-rtdb.firebaseio.com"
 //Clave secreta de autenticación
-#define FIREBASE_AUTH "YOUR_FIREBASE_AUTH"
+#define FIREBASE_AUTH "yJRwvdfruaBitv4ek2A5iOkWnXrXuznjDRpFocy1"
 //Nombre de la red Wi-Fi
-#define WIFI_SSID "YOUR_WIFI_SID"
+#define WIFI_SSID "Mega-5g-2FAD"  //si van a hacer pruebas, la cambian a su WiFi
 //Contreseña del WiFi
-#define WIFI_PASSWORD "YOUR_WIFI_PASSWORD"
+#define WIFI_PASSWORD "nXBSaB2QfT"
 
 // Define NTP Client(ESP32) to get time
 WiFiUDP ntpUDP; //WiFiUDP librería de Arduino que permite enviar y resivir datos, ntpUDP objeto para la comunicación con el servidor NTP
