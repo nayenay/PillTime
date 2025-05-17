@@ -4,6 +4,8 @@
 #include <NTPClient.h>         // Para obtener hora exacta
 #include <WiFiUdp.h>           // Comunicación UDP (protocolo) para NTP(Network Time Protocol)
 
+
+
 //Dirección del proyecto en Firebase
 #define FIREBASE_HOST "YOUR_FIRABSE_HOST"
 //Clave secreta de autenticación
@@ -34,82 +36,72 @@ String user = "jazmin";       //Usuario (parte de la ruta)
 String sensor = "prueba";    //En este ejemplo es el nombre del sensor (renombrar)
 int valuePrueba = 12;        //Valor a envia (cambiar a bool, solo presionará un botón verde o rojo)
 
-//Configuración inicial
+
+
+
+
+
+//Configuración inicial   (configurar piens, iniciar conexión WiFi, iniciar sensores, comenzar cominicación con FIrebase, actuadores...)
 void setup(){
-  Serial.begin(115200);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("Connecting to Wi-Fi");
-  while (WiFi.status() != WL_CONNECTED)  {
-    Serial.print(".");
-    delay(300);
+  Serial.begin(115200);                        //comunicación del ESP32(hardware) con la computadora, igual no lo veo necesario por el momento
+  
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);        //Inicia conexión WiFi con dos variables, nombre de la red y contraseña
+  Serial.print("Connecting to Wi-Fi");          //comentario 
+  while (WiFi.status() != WL_CONNECTED)  {      //Bucle hasta que el ESP32(hardware) esté conectado al WiFI
+    Serial.print(".");                          //imprime un punto para saber que está esperando
+    delay(300);                                  //espera 300 milisegundos para hacer otra iteración
   }
 
-  Serial.println();
-  Serial.print("Connected with IP: ");
-  Serial.println(WiFi.localIP());
+  Serial.println();                              //salto de linea
+  Serial.print("Connected with IP: ");          //imprime "Connected with IP: "
+  Serial.println(WiFi.localIP());                // imprime dirección IP que recibió el ESP32(hardware) del router WiFi
   Serial.println();
 
-  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
-  Firebase.reconnectWiFi(true);
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);  //inicia conexión con Firebase
+  Firebase.reconnectWiFi(true);                  //reconecta si se pierde la conexion
  //Size and its write timeout e.g. tiny (1s), small (10s), medium (30s) and large (60s).
-  Firebase.setwriteSizeLimit(firebaseData, "tiny");
+  Firebase.setwriteSizeLimit(firebaseData, "tiny");// establece un límite de tamaño para los datos escritos ***
 }
 
 
 
+
+
 //Bucle principal(loop)
-void loop()
-
-{
-
-    while(!timeClient.update()) {
-
-      timeClient.forceUpdate();
-
+void loop(){
+    while(!timeClient.update()) {                  //mientras no se haya podido obtener la hora correctamente
+      timeClient.forceUpdate();                    //actualiza hora
     }
+// modificar de acuerdo a nuestras necesidades, y deabtir como organizar la información para la pantalla progreso 
+  formattedDate = timeClient.getFormattedDate();    //Ej: "2025-05-15T10:35:47Z", timeClient obtiene la fehca y hora actual, la cuerda en formattedDate, T es de time hora
+    json.clear().add("Value", valuePrueba);        //Agrega el valor a JSON, primiero limpia el json, agrega una nueva clave -valor  "value"-"ValuePrueba",  "Value": 12,
+    json.add("Date", formattedDate);                // Agrega la fecha y hora al JSON, agrega "Date":"formattedDate" , "Date": "2025-05-15T10:35:47Z"
 
-    formattedDate = timeClient.getFormattedDate();
 
-    json.clear().add("Value", valuePrueba);
 
-    json.add("Date", formattedDate);
-
-    if (Firebase.pushJSON(firebaseData, path + "/" + user + "/" + sensor, json))
-
-    {
-
-      Serial.println("PASSED");
-
-      Serial.println("PATH: " + firebaseData.dataPath());
-
-      Serial.print("PUSH NAME: ");
-
-      Serial.println(firebaseData.pushName());
-
-      Serial.println("ETag: " + firebaseData.ETag());
-
+  
+// modificar de acuerdo a nuestras necesidades, y deabtir como organizar la información para la pantalla progreso 
+  // Envía los datos al path(ruta de firebase) /esp32/jazmin/prueba en Firebase
+    if (Firebase.pushJSON(firebaseData, path + "/" + user + "/" + sensor, json)) { //Agrega un nuevo nodo hijo con un ID único en la ruta dada (/esp32/jazmin/prueba)
+      Serial.println("PASSED");                              //"PASSED"
+      Serial.println("PATH: " + firebaseData.dataPath());     //"PATH: /esp32/jazmin/prueba/-Nr12345abcXYZ"
+      Serial.print("PUSH NAME: ");                            //
+      Serial.println(firebaseData.pushName());                //"PUSH NAME: -Nr12345abcXYZ"
+      Serial.println("ETag: " + firebaseData.ETag());          //'ETag: "wxyz4567"'              Muestra el identificador de versión del dato (para saber si fue modificado más tarde)
       Serial.println("------------------------------------");
-
       Serial.println();
-
     }
 
     else
-
     {
-
       Serial.println("FAILED");
-
-      Serial.println("REASON: " + firebaseData.errorReason());
-
+      Serial.println("REASON: " + firebaseData.errorReason());  //imprime error
       Serial.println("------------------------------------");
-
       Serial.println();
-
     }
 
  
 
-    delay(1000);
+    delay(1000);                                                //espera un segundo antes de enviar de nuevo los datos 
 
 }
