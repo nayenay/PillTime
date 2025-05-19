@@ -37,6 +37,23 @@ String sensor = "prueba";    //En este ejemplo es el nombre del sensor (renombra
 int valuePrueba = 12;        //Valor a envia (cambiar a bool, solo presionará un botón verde o rojo)
 
 
+int pines [10] = {23,22,19,18,5,17,16,4,2,15}; //Arreglo de pines de compartimentos
+#define BotonSiPin 33
+#define BotonNoPin 25
+#define BuzzerPin 34
+#define VibradorPin 35
+
+struct Compartimentos{  //Estructura de compartimentos
+  int numero;
+  int Pin;
+  bool estado;
+  String medicamento;
+  String PrimerDosis;
+  int Frecuencia;
+  int Dias;
+};
+
+Compartimentos c[10];
 
 
 
@@ -61,6 +78,14 @@ void setup(){
   Firebase.reconnectWiFi(true);                  //reconecta si se pierde la conexion
  //Size and its write timeout e.g. tiny (1s), small (10s), medium (30s) and large (60s).
   Firebase.setwriteSizeLimit(firebaseData, "tiny");// establece un límite de tamaño para los datos escritos ***
+  
+  for(int i = 0; i<10; i++){                      //Congfiguración de pines 
+    pinMode(c[i].Pin,OUTPUT);
+  }
+  pinMode(BotonSiPin,INPUT);
+  pinMode(BotonNoPin,INPUT);
+  pinMode(BuzzerPin,INPUT);
+  pinMode(VibradorPin,INPUT);
 }
 
 
