@@ -1,6 +1,6 @@
 // librerias
 #include <WiFi.h>              //Permite conectar el ESP32(harware) a una red WiFi
-#include <Firebase_ESP_Client.h>//Librería para usar Firebase con ESP32
+#include <FirebaseESP32.h>     //Librería para usar Firebase con ESP32
 #include <NTPClient.h>         // Para obtener hora exacta
 #include <WiFiUdp.h>           // Comunicación UDP (protocolo) para NTP(Network Time Protocol)
 
